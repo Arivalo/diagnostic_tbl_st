@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 import pandas as pd
 import datetime as dt
-
+import base64
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
@@ -55,6 +55,19 @@ def przygotuj_dane(dane):
     dane.rename(columns={kolumna:kolumna[6:] for kolumna in dane.columns if kolumna.startswith("_diag")}, inplace=True)
     
     return dane
+    
+    
+def get_table_download_link(df, nazwa_pliku):
+    """Generates a link allowing the data in a given panda dataframe to be downloaded
+    in:  dataframe
+    out: href string
+    """
+    csv = df.to_csv(index=False)
+    b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
+    href = f'<a href="data:file/csv;base64,{b64}" download="{nazwa_pliku}.csv">Download csv file</a>'
+    
+    return href
+    
  ######################################################################################################################
  
  
@@ -75,6 +88,9 @@ try:
     #st.help(px.line)
     
     st.write(df)
+    
+    st.write(" ")
+    st.markdown(get_table_download_link(df, f'diagnostics_{data_od}_{data_do}'), unsafe_allow_html=True)
 
     
 except KeyError:
