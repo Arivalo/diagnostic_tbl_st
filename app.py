@@ -7,6 +7,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
+st.set_page_config(layout="wide")
 
 @st.cache(suppress_st_warning=True)
 def download_data(url, haslo=st.secrets['password'], login=st.secrets['username'], retry=5):
